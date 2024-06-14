@@ -29,6 +29,10 @@ def main():
     screen.fill(p.Color("white"))
 
     gs = ChessEngine.GameState()
+
+    validMoves = []
+    moveMade = False # Flag variable for when a move is made
+
     loadImages() # Only do this before the while loop
 
     sqSelected = () # No square is selected, keep track of the last click of the user (tuple: (row, col))
@@ -39,6 +43,7 @@ def main():
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
+            # Mouse Handlers
             elif e.type == p.MOUSEBUTTONDOWN:
                 location = p.mouse.get_pos() # (x, y) location of the mouse
                 col = location[0] // SQ_SIZE
@@ -53,9 +58,24 @@ def main():
                 if len(playerClicks) == 2: # If the player has clicked twice make a move
                     move = ChessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
                     print(move.getChessNotation())
-                    gs.makeMove(move)
+
+                    if move in validMoves: # Make sure that the move being made is valid
+                        gs.makeMove(move)
+                        moveMade = True
+
                     sqSelected = () # Reset player clicks
                     playerClicks = []
+
+            # Key Handlers
+            elif e.type == p.KEYDOWN:
+                if e.key == p.K_z: # Undo when 'z' is pressed
+                    gs.undoMove()
+                    moveMade = True # If a player undo's we need to generate a new set of valid moves
+            
+            # If a valid move was made we then want to generate a new set of valid moves
+            if moveMade:
+                validMoves = gs.getValidMoves()
+                moveMade = False
 
         drawGameState(screen, gs)
 
