@@ -30,7 +30,7 @@ def main():
 
     gs = ChessEngine.GameState()
 
-    validMoves = []
+    validMoves = gs.getValidMoves() # Generate valid moves for the start of the game
     moveMade = False # Flag variable for when a move is made
 
     loadImages() # Only do this before the while loop
