@@ -51,39 +51,31 @@ class GameState():
     
     # Get all pawn moves located at row, col and append these moves to the moves list
     def getPawnMoves(self, row, col, moves):
-        if self.whiteToMove: # White pawn moves
-            if self.board[row-1][col] == "--": # One square pawn advance
-                moves.append(Move((row, col), (row-1, col), self.board)) # Add one square pawn advance to valid moves
+        # Portion of code to remove repeating of code
+        if self.whiteToMove:
+            enemyColor = "b"
+            moveDirection = -1
+            startRow = 6
+        else:
+            enemyColor = "w"
+            moveDirection = 1
+            startRow = 1
+    
+        if self.board[row + moveDirection][col] == "--": # One square pawn advance
+            moves.append(Move((row, col), (row + moveDirection, col), self.board)) # Add one square pawn advance to valid moves
 
-                if row == 6 and self.board[row-2][col] == "--": # Two square pawn advance
-                    moves.append(Move((row, col), (row-2, col), self.board))
+            if row == startRow and self.board[row + 2 * moveDirection][col] == "--": # Two square pawn advance
+                moves.append(Move((row, col), (row + 2 * moveDirection, col), self.board))
 
-            # Captures to the left
-            if col - 1 >= 0:
-                if self.board[row-1][col-1][0] == "b":
-                    moves.append(Move((row, col), (row-1, col-1), self.board))
-            
-            # Captures to the right
-            if col + 1 <= 7:
-                if self.board[row-1][col+1][0] == "b":
-                    moves.append(Move((row, col), (row-1, col+1), self.board))
+        # Captures to the left
+        if col - 1 >= 0:
+            if self.board[row + moveDirection][col-1][0] == enemyColor:
+                moves.append(Move((row, col), (row + moveDirection, col-1), self.board))
         
-        else: # Black pawn moves
-            if self.board[row+1][col] == "--": # One square pawn advance
-                moves.append(Move((row, col), (row+1, col), self.board))
-            
-                if row == 1 and self.board[row+2][col] == "--": # Two square pawn advance
-                    moves.append(Move((row, col), (row+2, col), self.board))
-            
-            # Captures to the left
-            if col - 1 >= 0:
-                if self.board[row+1][col-1][0] == "w":
-                    moves.append(Move((row, col), (row+1, col-1), self.board))
-            
-            # Captures to the right
-            if col + 1 <= 7:
-                if self.board[row+1][col+1][0] == "w":
-                    moves.append(Move((row, col), (row+1, col+1), self.board))
+        # Captures to the right
+        if col + 1 <= 7:
+            if self.board[row + moveDirection][col+1][0] == enemyColor:
+                moves.append(Move((row, col), (row + moveDirection, col+1), self.board))
     
     # Get all knight moves located at row, col and append these moves to the moves list
     def getKnightMoves(self, row, col, moves):
