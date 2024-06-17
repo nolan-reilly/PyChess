@@ -62,9 +62,10 @@ def main():
                     if move in validMoves: # Make sure that the move being made is valid
                         gs.makeMove(move)
                         moveMade = True
-
-                    sqSelected = () # Reset player clicks
-                    playerClicks = []
+                        sqSelected = () # Reset player clicks
+                        playerClicks = []
+                    else:
+                        playerClicks = [sqSelected]
 
             # Key Handlers
             elif e.type == p.KEYDOWN:
