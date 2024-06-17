@@ -87,7 +87,23 @@ class GameState():
     
     # Get all knight moves located at row, col and append these moves to the moves list
     def getKnightMoves(self, row, col, moves):
-        pass
+        # Check current color to see which pieces are to be captured
+        enemyColor = "b" if self.whiteToMove else "w"
+
+        # Calculate all the possible moves the knight has available
+        knightMoves = [
+            (row-2, col-1), (row-1, col-2), # Top left moves
+            (row-2, col+1), (row-1, col+2), # Top right moves
+            (row+2, col-1), (row+1, col-2), # Bottom left moves
+            (row+2, col+1), (row+1, col+2)  # Bottom right moves
+        ]
+
+        for newRow, newCol in knightMoves: # Loop through each possible move for each knight
+            if 0 <= newRow < 8 and 0 <= newCol < 8: # Check if the move is within the boundary
+                if self.board[newRow][newCol] == "--" or self.board[newRow][newCol][0] == enemyColor:
+                    moves.append(Move((row, col), (newRow, newCol), self.board))
+        
+
 
     # Get all bishop moves located at row, col and append these moves to the moves list
     def getBishopMoves(self, row, col, moves):
