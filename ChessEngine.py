@@ -97,15 +97,65 @@ class GameState():
 
     # Get all bishop moves located at row, col and append these moves to the moves list
     def getBishopMoves(self, row, col, moves):
-        pass
+        directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]  # Top-left, top-right, bottom-left, bottom-right
+        enemyColor = "b" if self.whiteToMove else "w"
+
+        for d in directions:
+            for i in range(1, 8):  # Bishop can move at most 7 squares in one direction
+                newRow = row + d[0] * i
+                newCol = col + d[1] * i
+                if 0 <= newRow < 8 and 0 <= newCol < 8:  # Check if new position is within the board
+                    if self.board[newRow][newCol] == "--":  # Empty square
+                        moves.append(Move((row, col), (newRow, newCol), self.board))
+                    elif self.board[newRow][newCol][0] == enemyColor:  # Enemy piece
+                        moves.append(Move((row, col), (newRow, newCol), self.board))
+                        break  # Stop searching in this direction after capturing
+                    else:  # Friendly piece
+                        break
+                else:  # Out of bounds
+                    break
 
     # Get all rook moves located at row, col and append these moves to the moves list
     def getRookMoves(self, row, col, moves):
-        pass
+        directions = [(-1, 0), (0, 1), (1, 0), (0, -1)] # Up, right, down, left
+        enemyColor = "b" if self.whiteToMove else "w"
+
+        for d in directions:
+            for i in range(1, 8):   # Rook can move at most 7 squares in one direction
+                newRow = row + d[0] * i
+                newCol = col + d[1] * i
+                if 0 <= newRow < 8 and 0 <= newCol < 8:  # Check if new position is within the board
+                    if self.board[newRow][newCol] == "--":  # Empty square
+                        moves.append(Move((row, col), (newRow, newCol), self.board))
+                    elif self.board[newRow][newCol][0] == enemyColor:  # Enemy piece
+                        moves.append(Move((row, col), (newRow, newCol), self.board))
+                        break  # Stop searching in this direction after capturing
+                    else:  # Friendly piece
+                        break
+                else:  # Out of bounds
+                    break
 
     # Get all queen moves located at row, col and append these moves to the moves list
     def getQueenMoves(self, row, col, moves):
-        pass
+        # Queen can move in all directions
+        directions = [(-1, 0), (0, 1), (1, 0), (0, -1),
+                      (-1, -1), (-1, 1), (1, -1), (1, 1)]
+        enemyColor = "b" if self.whiteToMove else "w"
+
+        for d in directions:
+            for i in range(1, 8):   # Rook can move at most 7 squares in one direction
+                newRow = row + d[0] * i
+                newCol = col + d[1] * i
+                if 0 <= newRow < 8 and 0 <= newCol < 8:  # Check if new position is within the board
+                    if self.board[newRow][newCol] == "--":  # Empty square
+                        moves.append(Move((row, col), (newRow, newCol), self.board))
+                    elif self.board[newRow][newCol][0] == enemyColor:  # Enemy piece
+                        moves.append(Move((row, col), (newRow, newCol), self.board))
+                        break  # Stop searching in this direction after capturing
+                    else:  # Friendly piece
+                        break
+                else:  # Out of bounds
+                    break
 
     # Get all king moves located at row, col and append these moves to the moves list
     def getKingMoves(self, row, col, moves):
