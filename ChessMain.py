@@ -1,7 +1,7 @@
 # This file is for handling user input and displaying the current GameState object 
 
 import pygame as p
-import ChessEngine
+import ChessEngine, ChessAI
 
 # Resolution of the board
 WIDTH = HEIGHT = 512 # 400 is another good display option\
@@ -47,15 +47,19 @@ def main():
     playerClicks = [] # Keeps track of the player's clicks (two tuples: [(6, 4), (4, 4)])
 
     gameOver = False
+    playerOne = True # If a Human is playing white, then this will be True. If an AI is playing, then false
+    playerTwo = False # Same as above but for black
 
     running = True
     while running:
+        isHumanTurn = (gs.whiteToMove and playerOne) or (not gs.whiteToMove and playerTwo)
+
         for e in p.event.get():
             if e.type == p.QUIT:
                 running = False
             # Mouse Handlers
             elif e.type == p.MOUSEBUTTONDOWN:
-                if not gameOver:
+                if not gameOver and isHumanTurn:
                     location = p.mouse.get_pos() # (x, y) location of the mouse
                     col = location[0] // SQ_SIZE
                     row = location[1] // SQ_SIZE
@@ -94,13 +98,20 @@ def main():
                     moveMade = False
                     animate = False
             
-            # If a valid move was made we then want to generate a new set of valid moves
-            if moveMade:
-                if animate:
-                    animateMove(gs.moveLog[-1], screen, gs.board, clock)
-                validMoves = gs.getValidMoves()
-                moveMade = False
-                animate = False
+        # AI move finder
+        if not gameOver and not isHumanTurn:
+            AIMove = ChessAI.findRandomMove(validMoves) # Give the AI the current available moves
+            gs.makeMove(AIMove)
+            moveMade = True
+            animate = True
+
+        # If a valid move was made we then want to generate a new set of valid moves
+        if moveMade:
+            if animate:
+                animateMove(gs.moveLog[-1], screen, gs.board, clock)
+            validMoves = gs.getValidMoves()
+            moveMade = False
+            animate = False
 
         drawGameState(screen, gs, validMoves, sqSelected)
 
@@ -162,7 +173,8 @@ def drawPieces(screen, board):
                 # Currently don't know what the function blit() does???
                 screen.blit(IMAGES[piece], p.Rect(col*SQ_SIZE, row*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
-#  Animating a move
+
+# Animating a move
 def animateMove(move, screen, board, clock):
     global colors
     deltaRow = move.endRow - move.startRow
@@ -186,13 +198,17 @@ def animateMove(move, screen, board, clock):
         p.display.flip()
         clock.tick(MAX_FPS)
 
+    # TODO: Add variable to disable sound effects
+
+    # ---------- Add some way below to add check sound effect ----------
     if move.isCastleMove:
         castleSound.play()
     elif move.pieceCaptured == "--":
         moveSound.play()
     else:
         captureSound.play()
-    
+
+# Fix Game Over Text as it's not too unique or good looking
 def drawText(screen, text):
     font = p.font.SysFont("Helvitca", 32, True, False)
     textObject = font.render(text, 0, p.Color("Gray"))
