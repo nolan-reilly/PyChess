@@ -14,6 +14,8 @@ IMAGES = {}
 p.mixer.init()
 moveSound = p.mixer.Sound("sfx/move.mp3")
 captureSound = p.mixer.Sound("sfx/capture.mp3")
+# ---------- Todo Add check sound effect ---------
+# checkSound = p.mixer.Sound("sfx/check.mp3")
 castleSound = p.mixer.Sound("sfx/castle.mp3")
 
 # Initialize a global dictionary of images. This is done only once in main
@@ -184,7 +186,6 @@ def animateMove(move, screen, board, clock):
         p.display.flip()
         clock.tick(MAX_FPS)
 
-    # Play sound effect based on move type
     if move.isCastleMove:
         castleSound.play()
     elif move.pieceCaptured == "--":
