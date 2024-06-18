@@ -360,7 +360,7 @@ class GameState():
     def getQueenSideCastleMoves(self, row, col, moves):
         if self.board[row][col-1] == "--" and self.board[row][col-2] == "--" and self.board[row][col-3] == "--":
             if not self.squareUnderAttack(row, col-1) and not self.squareUnderAttack(row, col-2):
-                moves.append(Move(row, col), (row, col-2), self.board, isCastleMove=True)
+                moves.append(Move((row, col), (row, col-2), self.board, isCastleMove=True))
         
 
 class CastleRights():
