@@ -3,14 +3,18 @@
 import pygame as p
 import ChessEngine
 
-print(p.__version__)
-
 # Resolution of the board
 WIDTH = HEIGHT = 512 # 400 is another good display option\
 DIMENSION = 8 # Dimensions of a chess board
 SQ_SIZE = HEIGHT // DIMENSION
-MAX_FPS = 15 # Used for animations
+MAX_FPS = 90 # Used for animations
 IMAGES = {}
+
+# Load sound effects
+p.mixer.init()
+moveSound = p.mixer.Sound("sfx/move.mp3")
+captureSound = p.mixer.Sound("sfx/capture.mp3")
+castleSound = p.mixer.Sound("sfx/castle.mp3")
 
 # Initialize a global dictionary of images. This is done only once in main
 def loadImages():
@@ -161,13 +165,14 @@ def animateMove(move, screen, board, clock):
     global colors
     deltaRow = move.endRow - move.startRow
     deltaCol = move.endCol - move.startCol
-    framesPerSquare = 3 # Frames to move one square
-    frameCount = (abs(deltaRow) + abs(deltaCol)) * framesPerSquare
+    totalTime = 0.1 # total time for the animation in seconds
+    frameCount = int(totalTime * MAX_FPS)
     for frame in range(frameCount + 1):
-        row, col = (move.startRow + deltaRow*frame/frameCount, move.startCol + deltaCol*frame/frameCount)
+        row = move.startRow + deltaRow * (frame / frameCount)
+        col = move.startCol + deltaCol * (frame / frameCount)
         drawBoard(screen)
         drawPieces(screen, board)
-        # Erase the piece moved from it's ending square
+        # Erase the piece moved from its ending square
         color = colors[(move.endRow + move.endCol) % 2]
         endSquare = p.Rect(move.endCol*SQ_SIZE, move.endRow*SQ_SIZE, SQ_SIZE, SQ_SIZE)
         p.draw.rect(screen, color, endSquare)
@@ -177,7 +182,15 @@ def animateMove(move, screen, board, clock):
         # Draw moving piece
         screen.blit(IMAGES[move.pieceMoved], p.Rect(col*SQ_SIZE, row*SQ_SIZE, SQ_SIZE, SQ_SIZE))
         p.display.flip()
-        clock.tick(60)
+        clock.tick(MAX_FPS)
+
+    # Play sound effect based on move type
+    if move.isCastleMove:
+        castleSound.play()
+    elif move.pieceCaptured == "--":
+        moveSound.play()
+    else:
+        captureSound.play()
     
 def drawText(screen, text):
     font = p.font.SysFont("Helvitca", 32, True, False)
