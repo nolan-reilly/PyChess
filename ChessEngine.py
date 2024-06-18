@@ -132,6 +132,20 @@ class GameState():
                 elif move.startCol == 7: # Right rook
                     self.currentCastlingRight.bks = False
         
+        # If a rook is captured remove castling rights
+        if move.pieceCaptured == "wR":
+            if move.endRow == 7:
+                if move.endCol == 0:
+                    self.currentCastlingRight.wqs = False
+                elif move.endCol == 7:
+                    self.currentCastlingRight.wks = False
+            elif move.pieceCaptured == "bR":
+                if move.endRow == 0:
+                    if move.endCol == 0:
+                        self.currentCastlingRight.bqs = False
+                    elif move.endCol == 7:
+                        self.currentCastlingRight.bks = False
+        
 
     # All moves considering checks
     def getValidMoves(self):
@@ -344,7 +358,7 @@ class GameState():
                 moves.append(Move((row, col), (row, col+2), self.board, isCastleMove=True))
 
     def getQueenSideCastleMoves(self, row, col, moves):
-        if self.board[row][col-1] == "--" and self.board[row][col-2] == "--" and self.board[row][col-3]:
+        if self.board[row][col-1] == "--" and self.board[row][col-2] == "--" and self.board[row][col-3] == "--":
             if not self.squareUnderAttack(row, col-1) and not self.squareUnderAttack(row, col-2):
                 moves.append(Move(row, col), (row, col-2), self.board, isCastleMove=True)
         
