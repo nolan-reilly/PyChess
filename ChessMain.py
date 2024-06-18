@@ -10,6 +10,7 @@ SQ_SIZE = HEIGHT // DIMENSION
 MAX_FPS = 90 # Used for animations
 IMAGES = {}
 
+isSoundDisabled = False
 # Load sound effects
 p.mixer.init()
 moveSound = p.mixer.Sound("sfx/move.mp3")
@@ -47,7 +48,7 @@ def main():
     playerClicks = [] # Keeps track of the player's clicks (two tuples: [(6, 4), (4, 4)])
 
     gameOver = False
-    playerOne = True # If a Human is playing white, then this will be True. If an AI is playing, then false
+    playerOne = False # If a Human is playing white, then this will be True. If an AI is playing, then false
     playerTwo = False # Same as above but for black
 
     running = True
@@ -198,17 +199,16 @@ def animateMove(move, screen, board, clock):
         p.display.flip()
         clock.tick(MAX_FPS)
 
-    # TODO: Add variable to disable sound effects
+    if not isSoundDisabled:
+        # ---------- Add some way below to add check sound effect ----------
+        if move.isCastleMove:
+            castleSound.play()
+        elif move.pieceCaptured == "--":
+            moveSound.play()
+        else:
+            captureSound.play()
 
-    # ---------- Add some way below to add check sound effect ----------
-    if move.isCastleMove:
-        castleSound.play()
-    elif move.pieceCaptured == "--":
-        moveSound.play()
-    else:
-        captureSound.play()
-
-# Fix Game Over Text as it's not too unique or good looking
+# TODO: Fix the end game text to make it better looking
 def drawText(screen, text):
     font = p.font.SysFont("Helvitca", 32, True, False)
     textObject = font.render(text, 0, p.Color("Gray"))
