@@ -3,6 +3,24 @@ import random
 
 piece_score = {"K": 0, "Q": 900, "R": 500, "B": 300, "N": 300, "p": 100}
 
+king_scores = [[-30, -40, -40, -50, -50, -40, -40, -30],
+               [-30, -40, -40, -50, -50, -40, -40, -30],
+               [-30, -40, -40, -50, -50, -40, -40, -30],
+               [-30, -40, -40, -50, -50, -40, -40, -30],
+               [-20, -30, -30, -40, -40, -30, -30, -20],
+               [-10, -20, -20, -20, -20, -20, -20, -10],
+               [20, 20, 0, 0, 0, 0, 20, 20],
+               [20, 30, 10, 0, 0, 10, 30, 20]]
+
+king_endgame_scores = [[-50, -40, -30, -20, -20, -30, -40, -50],
+                       [-30, -20, -10, 0, 0, -10, -20, -30],
+                       [-30, -10, 20, 30, 30, 20, -10, -30],
+                       [-30, -10, 30, 40, 40, 30, -10, -30],
+                       [-30, -10, 30, 40, 40, 30, -10, -30],
+                       [-30, -10, 20, 30, 30, 20, -10, -30],
+                       [-30, -30, 0, 0, 0, 0, -30, -30],
+                       [-50, -30, -30, -30, -30, -30, -30, -50]]
+
 knight_scores = [[-50, -40, -30, -30, -30, -30, -40, -50],
                  [-40, -20, 0, 0, 0, 0, -20, -40],
                  [-30, 0, 10, 15, 15, 10, 0, -30],
@@ -45,7 +63,7 @@ pawn_scores = [[0, 0, 0, 0, 0, 0, 0, 0],
                [5, 5, 10, 25, 25, 10, 5, 5],
                [0, 0, 0, 20, 20, 0, 0, 0],
                [5, -5, -10, 0, 0, -10, -5, 5],
-               [5, 10, 10, -35, -35, 10, 10, 5],
+               [5, 10, 10, -20, -20, 10, 10, 5],
                [0, 0, 0, 0, 0, 0, 0, 0]]
 
 piece_position_scores = {"wN": knight_scores,
@@ -57,15 +75,15 @@ piece_position_scores = {"wN": knight_scores,
                          "wR": rook_scores,
                          "bR": rook_scores[::-1],
                          "wp": pawn_scores,
-                         "bp": pawn_scores[::-1]}
+                         "bp": pawn_scores[::-1],
+                         "wK": king_scores,
+                         "bK": king_scores[::-1]}
 
 # TODO: Add castling bonuses
-# Castling Bonuses
-CASTLING_BONUS = 100
 
 CHECKMATE = 100000
 STALEMATE = 0
-DEPTH = 4
+DEPTH = 3
 
 # TODO: There seems to be repetition in moves or cycle that can be created that should be avoided
 
@@ -102,6 +120,14 @@ def findMoveNegaMaxAlphaBeta(game_state, valid_moves, depth, alpha, beta, turn_m
             break
     return max_score
 
+def isEndgame(game_state):
+    total_material = 0
+    for row in game_state.board:
+        for piece in row:
+            if piece != "--" and piece[1] != "K":
+                total_material += piece_score[piece[1]]
+    return total_material < 1600  # Threshold for endgame can be adjusted
+
 # Score the board. A positive score is good for white, a negative score is good for black.
 def scoreBoard(game_state):
     if game_state.checkmate:
@@ -111,13 +137,21 @@ def scoreBoard(game_state):
             return CHECKMATE  # white wins
     elif game_state.stalemate:
         return STALEMATE
+
     score = 0
+    endgame = isEndgame(game_state)  # Check if it's the endgame
+
     for row in range(len(game_state.board)):
         for col in range(len(game_state.board[row])):
             piece = game_state.board[row][col]
             if piece != "--":
                 piece_position_score = 0
-                if piece[1] != "K":
+                if piece[1] == "K":
+                    if endgame:
+                        piece_position_score = king_endgame_scores[row][col]
+                    else:
+                        piece_position_score = king_scores[row][col]
+                else:
                     piece_position_score = piece_position_scores[piece][row][col]
                 if piece[0] == "w":
                     score += piece_score[piece[1]] + piece_position_score
