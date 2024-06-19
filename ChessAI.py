@@ -83,7 +83,8 @@ piece_position_scores = {"wN": knight_scores,
 
 CHECKMATE = 100000
 STALEMATE = 0
-DEPTH = 3
+# Depth 4 seems to be playable when using pypy, I'd like to reach depth 5 but it's unplayable right now
+DEPTH = 4
 
 # TODO: There seems to be repetition in moves or cycle that can be created that should be avoided
 

@@ -11,7 +11,7 @@ MOVE_LOG_PANEL_WIDTH = 250
 MOVE_LOG_PANEL_HEIGHT = BOARD_HEIGHT
 DIMENSION = 8
 SQUARE_SIZE = BOARD_HEIGHT // DIMENSION
-MAX_FPS = 90 # Used for animations
+MAX_FPS = 60 # Used for animations
 IMAGES = {}
 
 # Game Settings
