@@ -15,7 +15,7 @@ MAX_FPS = 90 # Used for animations
 IMAGES = {}
 
 # Game Settings
-is_sound_disabled = False
+is_sound_disabled = True
 
 # Load game sound effects
 p.mixer.init()

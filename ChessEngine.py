@@ -94,10 +94,8 @@ class GameState:
         self.castle_rights_log.append(CastleRights(self.current_castling_rights.wks, self.current_castling_rights.bks,
                                                    self.current_castling_rights.wqs, self.current_castling_rights.bqs))
 
+    # Undo the last move made
     def undoMove(self):
-        """
-        Undo the last move
-        """
         if len(self.move_log) != 0:  # make sure that there is a move to undo
             move = self.move_log.pop()
             self.board[move.start_row][move.start_col] = move.piece_moved
