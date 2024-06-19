@@ -83,28 +83,26 @@ piece_position_scores = {"wN": knight_scores,
 
 CHECKMATE = 100000
 STALEMATE = 0
-# Depth 4 seems to be playable when using pypy, I'd like to reach depth 5 but it's unplayable right now
 DEPTH = 3
 
+# TODO: Reduce amount of moves searched
 # TODO: There seems to be repetition in moves or cycle that can be created that should be avoided
+
+move_times = []
 
 def findBestMove(game_state, valid_moves, return_queue):
     global next_move, counter
     next_move = None
     random.shuffle(valid_moves)
-    counter = 0
     findMoveNegaMaxAlphaBeta(game_state, valid_moves, DEPTH, -CHECKMATE, CHECKMATE,
                              1 if game_state.white_to_move else -1)
-    print(counter)
     return_queue.put(next_move)
 
 
 def findMoveNegaMaxAlphaBeta(game_state, valid_moves, depth, alpha, beta, turn_multiplier):
     global next_move, counter
-    counter += 1
     if depth == 0:
         return turn_multiplier * scoreBoard(game_state)
-    # move ordering - implement later //TODO
     max_score = -CHECKMATE
     for move in valid_moves:
         game_state.makeMove(move)
