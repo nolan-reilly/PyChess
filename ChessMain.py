@@ -48,7 +48,7 @@ def main():
     playerClicks = [] # Keeps track of the player's clicks (two tuples: [(6, 4), (4, 4)])
 
     gameOver = False
-    playerOne = False # If a Human is playing white, then this will be True. If an AI is playing, then false
+    playerOne = True # If a Human is playing white, then this will be True. If an AI is playing, then false
     playerTwo = False # Same as above but for black
 
     running = True
@@ -87,10 +87,12 @@ def main():
 
             # Key Handlers
             elif e.type == p.KEYDOWN:
+                # TODO: Undoing causing some undefined problems like pieces spawning in that shouldn't be there
                 if e.key == p.K_z: # Undo when 'z' is pressed
                     gs.undoMove()
                     moveMade = True # If a player undo's we need to generate a new set of valid moves
                     animate = False
+                    gameOver = False
                 if e.key == p.K_r: # Reset the board when 'r' is pressed
                     gs = ChessEngine.GameState()
                     validMoves = gs.getValidMoves()
@@ -98,10 +100,13 @@ def main():
                     playerClicks = []
                     moveMade = False
                     animate = False
+                    gameOver = False
             
         # AI move finder
         if not gameOver and not isHumanTurn:
-            AIMove = ChessAI.findRandomMove(validMoves) # Give the AI the current available moves
+            AIMove = ChessAI.findBestMove(gs, validMoves) # Give the AI the current available moves
+            if AIMove is None:
+                AIMove = ChessAI.findRandomMove(validMoves)
             gs.makeMove(AIMove)
             moveMade = True
             animate = True

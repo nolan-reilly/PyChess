@@ -110,6 +110,11 @@ class GameState():
                 else: # Queen side
                     self.board[move.endRow][move.endCol-2] = self.board[move.endRow][move.endCol+1]
                     self.board[move.endRow][move.endCol+1] == "--"
+            
+            # Need these for bug fixes as if we undo we shouldn't every be in check or stalemate
+            self.checkmate = False
+            self.stalemate = False
+
     
     # Update the castle rights given the move
     def updateCastleRights(self, move):
