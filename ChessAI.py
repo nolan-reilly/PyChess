@@ -80,15 +80,12 @@ piece_position_scores = {"wN": knight_scores,
                          "bK": king_scores[::-1]}
 
 # TODO: Add castling bonuses
+# TODO Stop AI from repeating moves
+# TODO Add Killer moves
 
 CHECKMATE = 100000
 STALEMATE = 0
 DEPTH = 3
-
-# TODO: Reduce amount of moves searched
-# TODO: There seems to be repetition in moves or cycle that can be created that should be avoided
-
-move_times = []
 
 def findBestMove(game_state, valid_moves, return_queue):
     global next_move, counter
