@@ -50,7 +50,6 @@ def main():
 
     loadImages()  # Only do this before the while loop once
     
-    
     square_selected = ()  # No square is selected, keep track of the last click of the user (tuple: (row, col))
     player_clicks = []  # Keeps track of the player's clicks (two tuples: [(6, 4), (4, 4)])
 
@@ -60,7 +59,7 @@ def main():
     move_finder_process = None
     move_log_font = p.font.SysFont("Arial", 14, False, False)
     player_one = False  # If a Human is playing white, then this will be True. If an AI is playing, then false
-    player_two = False  # Same as above but for black
+    player_two = True  # Same as above but for black
 
     running = True
     while running:

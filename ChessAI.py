@@ -12,6 +12,15 @@ king_scores = [[-30, -40, -40, -50, -50, -40, -40, -30],
                [20, 20, 0, 0, 0, 0, 20, 20],
                [20, 30, 10, 0, 0, 10, 30, 20]]
 
+king_endgame_scores = [[-50, -40, -30, -20, -20, -30, -40, -50],
+                       [-30, -20, -10, 0, 0, -10, -20, -30],
+                       [-30, -10, 20, 30, 30, 20, -10, -30],
+                       [-30, -10, 30, 40, 40, 30, -10, -30],
+                       [-30, -10, 30, 40, 40, 30, -10, -30],
+                       [-30, -10, 20, 30, 30, 20, -10, -30],
+                       [-30, -30, 0, 0, 0, 0, -30, -30],
+                       [-50, -30, -30, -30, -30, -30, -30, -50]]
+
 knight_scores = [[-50, -40, -30, -30, -30, -30, -40, -50],
                  [-40, -20, 0, 0, 0, 0, -20, -40],
                  [-30, 0, 10, 15, 15, 10, 0, -30],
@@ -90,7 +99,7 @@ def findBestMove(game_state, valid_moves, return_queue):
 def findMoveNegaMaxAlphaBeta(game_state, valid_moves, depth, alpha, beta, turn_multiplier):
     global next_move
     if depth == 0:
-        return turn_multiplier * scoreBoard(game_state, valid_moves)
+        return turn_multiplier * scoreBoard(game_state)
     
     max_score = -CHECKMATE
     valid_moves = orderMoves(game_state, valid_moves)
@@ -109,6 +118,14 @@ def findMoveNegaMaxAlphaBeta(game_state, valid_moves, depth, alpha, beta, turn_m
         if alpha >= beta:
             break
     return max_score
+
+def isEndgame(game_state):
+    total_material = 0
+    for row in game_state.board:
+        for piece in row:
+            if piece != "--" and piece[1] != "K":
+                total_material += piece_score[piece[1]]
+    return total_material < 1600  # Threshold for endgame can be adjusted
 
 def orderMoves(game_state, valid_moves):
     move_scores = []
@@ -166,7 +183,7 @@ def scoreMove(game_state, move):
     return move_score
 
 # Score the board. A positive score is good for white, a negative score is good for black.
-def scoreBoard(game_state, valid_moves):
+def scoreBoard(game_state):
     if game_state.checkmate:
         if game_state.white_to_move:
             return -CHECKMATE  # black wins
@@ -176,11 +193,20 @@ def scoreBoard(game_state, valid_moves):
         return STALEMATE
 
     score = 0
+    endgame = isEndgame(game_state)  # Check if it's the endgame
 
     for row in range(len(game_state.board)):
         for col in range(len(game_state.board[row])):
             piece = game_state.board[row][col]
             if piece != "--":
+                piece_position_score = 0
+                if piece[1] == "K":
+                    if endgame:
+                        piece_position_score = king_endgame_scores[row][col]
+                    else:
+                        piece_position_score = king_scores[row][col]
+                else:
+                    piece_position_score = piece_position_scores[piece][row][col]
                 piece_position_score = piece_position_scores[piece][row][col]
                 if piece[0] == "w":
                     score += piece_score[piece[1]] + piece_position_score
