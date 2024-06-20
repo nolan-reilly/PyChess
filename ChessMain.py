@@ -58,8 +58,8 @@ def main():
     move_undone = False
     move_finder_process = None
     move_log_font = p.font.SysFont("Arial", 14, False, False)
-    player_one = False  # If a Human is playing white, then this will be True. If an AI is playing, then false
-    player_two = True  # Same as above but for black
+    player_one = True  # If a Human is playing white, then this will be True. If an AI is playing, then false
+    player_two = False  # Same as above but for black
 
     running = True
     while running:

@@ -1,7 +1,7 @@
 # This file handles the AI's moves
 import random
 
-piece_score = {"p": 100, "N": 280, "B": 320, "R": 479, "Q": 929, "K": 60000}
+piece_score = {"p": 100, "N": 280, "B": 320, "R": 479, "Q": 929, "K": 0}
 
 king_scores = [[-30, -40, -40, -50, -50, -40, -40, -30],
                [-30, -40, -40, -50, -50, -40, -40, -30],
