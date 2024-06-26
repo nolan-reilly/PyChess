@@ -4,7 +4,7 @@
 
 1. Clone the repository:
     ```bash
-    git clone git@github.com:nolan-reilly/chess-engine.git
+    git clone git@github.com:nolan-reilly/PyChess.git
     ```
 
 2. Install dependencies:
