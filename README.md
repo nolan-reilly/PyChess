@@ -6,7 +6,7 @@
     ```bash
     git clone git@github.com:nolan-reilly/PyChess.git
     ```
-2. Move into the current directory/Folder
+2. Move into the current directory/folder
    ```bash
    cd PyChess
    ```
