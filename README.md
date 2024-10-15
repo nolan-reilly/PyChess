@@ -6,13 +6,17 @@
     ```bash
     git clone git@github.com:nolan-reilly/PyChess.git
     ```
+2. Move into the current directory/Folder
+   ```bash
+   cd PyChess
+   ```
 
-2. Install dependencies:
+3. Install dependencies:
     ```bash
     pip install -r requirements.txt
     ```
 
-3. Start the game:
+4. Start the game:
     ```bash
     python ChessMain.py
     ```
