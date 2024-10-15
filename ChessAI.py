@@ -85,7 +85,7 @@ piece_position_scores = {"wN": knight_scores,
 
 CHECKMATE = 100000
 STALEMATE = 0
-DEPTH = 4
+DEPTH = 3
 
 def findBestMove(game_state, valid_moves, return_queue):
     global next_move
