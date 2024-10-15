@@ -20,7 +20,7 @@
     ```bash
     python ChessMain.py
     ```
-If the above command doesn't work try this:
+    If the above command doesn't work try this:
     ```bash
     python3 ChessMain.py
     ```
